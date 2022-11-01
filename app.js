@@ -7,23 +7,24 @@ app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
 
-// set route for GET http://localhost:3000/users
+// set route for http://localhost:3000/users
 app.get("/users", (req, res) => {
-  res.send("GET /users");
+  res.json(require("./data/users.json"));
 });
 
-// set route for GET http://localhost:3000/cards
+// set route for http://localhost:3000/cards
 app.get("/cards", (req, res) => {
-  res.send("GET /cards");
+  res.json(require("./data/cards.json"));
 });
 
-// set route for GET http://localhost:3000/users/8340d0ec33270a25f2413b69 if id does not match, API should send JSON: { "message": "ID de usuario no encontrado" }
-app.get("/users/:id", (req, res) => {
-  const { id } = req.params;
-  if (id === "8340d0ec33270a25f2413b69") {
-    res.send("GET /users/8340d0ec33270a25f2413b69");
+// set route for http://localhost:3000/users/8340d0ec33270a25f2413b69 and show only that _id if id does not match, API should send JSON: { "message": "ID de usuario no encontrado" }
+app.get("/users/:_id", (req, res) => {
+  const { _id } = req.params;
+  const user = require("./data/users.json").find((user) => user._id === _id);
+  if (user) {
+    res.json(user);
   } else {
-    res.status(404).send({ message: "ID de usuario no encontrado" });
+    res.status(404).json({ message: "ID de usuario no encontrado" });
   }
 });
 
